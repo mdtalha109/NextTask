@@ -14,16 +14,17 @@ import {
 } from "@/components/ui/popover";
 import { deleteBoard } from "@/actions/delete-board";
 
+
 interface BoardOptionsProps {
   id: string;
 };
 
 export const BoardOptions = ({ id }: BoardOptionsProps) => {
-  const { execute, isLoading } = useAction(deleteBoard, {
-    onError: (error) => {
-      toast.error(error);
-    }
-  });
+  // const { execute, isLoading } = useAction(deleteBoard, {
+  //   onError: (error) => {
+  //     toast.error(error);
+  //   }
+  // });
 
   const onDelete = () => {
     // execute({ id });
