@@ -8,7 +8,7 @@ import { useState, useRef, ElementRef } from "react";
 import { useAction } from "@/hooks/use-action";
 // import { updateList } from "@/actions/update-list";
 import { FormInput } from "@/components/form/form-input";
-
+import { updateList } from "@/actions/update-list";
 import { ListOptions } from "./list-options";
 
 // import { ListOptions } from "./list-options";
@@ -40,7 +40,16 @@ export const ListHeader = ({
     setIsEditing(false);
   };
 
- 
+  const { execute } = useAction(updateList, {
+    onSuccess: (data) => {
+      toast.success(`Renamed to "${data.title}"`);
+      setTitle(data.title);
+      disableEditing();
+    },
+    onError: (error) => {
+      toast.error(error);
+    }
+  });
 
   const handleSubmit = (formData: FormData) => {
     const title = formData.get("title") as string;
@@ -51,7 +60,11 @@ export const ListHeader = ({
       return disableEditing();
     }
 
-  
+    execute({
+      title,
+      id,
+      boardId,
+    });
   }
 
   const onBlur = () => {
