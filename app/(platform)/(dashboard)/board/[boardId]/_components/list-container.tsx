@@ -2,16 +2,14 @@
 
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
-// import { DragDropContext, Droppable } from "@hello-pangea/dnd";
-
-
-import { useAction } from "@/hooks/use-action";
-// import { updateListOrder } from "@/actions/update-list-order";
-// import { updateCardOrder } from "@/actions/update-card-order";
-
-import { ListForm } from "./list-form";
+import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 
 import { ListWithCards } from "@/app/types";
+import { useAction } from "@/hooks/use-action";
+import { updateListOrder } from "@/actions/update-list-order";
+import { updateCardOrder } from "@/actions/update-card-order";
+
+import { ListForm } from "./list-form";
 import { ListItem } from "./list-item";
 
 interface ListContainerProps {
@@ -33,23 +31,23 @@ export const ListContainer = ({
 }: ListContainerProps) => {
   const [orderedData, setOrderedData] = useState(data);
 
-//   const { execute: executeUpdateListOrder } = useAction(updateListOrder, {
-//     onSuccess: () => {
-//       toast.success("List reordered");
-//     },
-//     onError: (error) => {
-//       toast.error(error);
-//     },
-//   });
+  const { execute: executeUpdateListOrder } = useAction(updateListOrder, {
+    onSuccess: () => {
+      toast.success("List reordered");
+    },
+    onError: (error) => {
+      toast.error(error);
+    },
+  });
 
-//   const { execute: executeUpdateCardOrder } = useAction(updateCardOrder, {
-//     onSuccess: () => {
-//       toast.success("Card reordered");
-//     },
-//     onError: (error) => {
-//       toast.error(error);
-//     },
-//   });
+  const { execute: executeUpdateCardOrder } = useAction(updateCardOrder, {
+    onSuccess: () => {
+      toast.success("Card reordered");
+    },
+    onError: (error) => {
+      toast.error(error);
+    },
+  });
 
   useEffect(() => {
     setOrderedData(data);
@@ -79,7 +77,7 @@ export const ListContainer = ({
       ).map((item, index) => ({ ...item, order: index }));
 
       setOrderedData(items);
-    //   executeUpdateListOrder({ items, boardId });
+      executeUpdateListOrder({ items, boardId });
     }
 
     // User moves a card
@@ -119,10 +117,10 @@ export const ListContainer = ({
         sourceList.cards = reorderedCards;
 
         setOrderedData(newOrderedData);
-        // executeUpdateCardOrder({
-        //   boardId: boardId,
-        //   items: reorderedCards,
-        // });
+        executeUpdateCardOrder({
+          boardId: boardId,
+          items: reorderedCards,
+        });
         // User moves the card to another list
       } else {
         // Remove card from the source list
@@ -144,17 +142,21 @@ export const ListContainer = ({
         });
 
         setOrderedData(newOrderedData);
-        // executeUpdateCardOrder({
-        //   boardId: boardId,
-        //   items: destList.cards,
-        // });
+        executeUpdateCardOrder({
+          boardId: boardId,
+          items: destList.cards,
+        });
       }
     }
   }
 
   return (
-    
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Droppable droppableId="lists" type="list" direction="horizontal">
+        {(provided) => (
           <ol 
+            {...provided.droppableProps}
+            ref={provided.innerRef}  
             className="flex gap-x-3 h-full"
           >
             {orderedData.map((list, index) => {
@@ -166,11 +168,12 @@ export const ListContainer = ({
                 />
               )
             })}
-           
+            {provided.placeholder}
             <ListForm />
             <div className="flex-shrink-0 w-1" />
           </ol>
-    
-    
+        )}
+      </Droppable>
+    </DragDropContext>
   );
 };
