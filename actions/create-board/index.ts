@@ -8,9 +8,9 @@ import { createSafeAction } from "@/lib/create-safe-action";
 import { CreateBoard } from "./schema";
 
 const handler = async (data: InputType): Promise<ReturnType> => {
-    const {userId} = auth();
+    const {userId, orgId} = auth();
 
-    if(!userId){
+    if(!userId || !orgId){
         return {
             error: "Unauthorized"
         }
@@ -22,7 +22,8 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     try{
         board = await db.board.create({
             data: {
-                title
+                title,
+                orgId
             }
         })
     } catch(error){
