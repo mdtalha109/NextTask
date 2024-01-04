@@ -8,9 +8,10 @@ import { useParams } from "next/navigation";
 
 import { CardWithList } from "@/app/types";
 import { useAction } from "@/hooks/use-action";
-// import { updateCard } from "@/actions/update-card";
+import { updateCard } from "@/actions/update-card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FormInput } from "@/components/form/form-input";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface HeaderProps {
   data: CardWithList;
@@ -19,26 +20,26 @@ interface HeaderProps {
 export const Header = ({
   data,
 }: HeaderProps) => {
-//   const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
   const params = useParams();
 
-//   const { execute } = useAction(updateCard, {
-//     onSuccess: (data) => {
-//       queryClient.invalidateQueries({
-//         queryKey: ["card", data.id]
-//       });
+  const { execute } = useAction(updateCard, {
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ["card", data.id]
+      });
 
-//       queryClient.invalidateQueries({
-//         queryKey: ["card-logs", data.id]
-//       });
+      queryClient.invalidateQueries({
+        queryKey: ["card-logs", data.id]
+      });
 
-//       toast.success(`Renamed to "${data.title}"`);
-//       setTitle(data.title);
-//     },
-//     onError: (error) => {
-//       toast.error(error);
-//     }
-//   });
+      toast.success(`Renamed to "${data.title}"`);
+      setTitle(data.title);
+    },
+    onError: (error) => {
+      toast.error(error);
+    }
+  });
 
   const inputRef = useRef<ElementRef<"input">>(null);
 
@@ -56,11 +57,11 @@ export const Header = ({
       return;
     }
 
-    // execute({
-    //   title,
-    //   boardId,
-    //   id: data.id,
-    // });
+    execute({
+      title,
+      boardId,
+      id: data.id,
+    });
   }
 
   return (
