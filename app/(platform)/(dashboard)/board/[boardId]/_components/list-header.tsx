@@ -5,13 +5,13 @@ import { List } from "@prisma/client";
 import { useEventListener } from "usehooks-ts";
 import { useState, useRef, ElementRef } from "react";
 
+import { FaPlus, FaTrash } from 'react-icons/fa';
 import { useAction } from "@/hooks/use-action";
-// import { updateList } from "@/actions/update-list";
 import { FormInput } from "@/components/form/form-input";
 import { updateList } from "@/actions/update-list";
-import { ListOptions } from "./list-options";
+import { deleteList } from "@/actions/delete-list";
 
-// import { ListOptions } from "./list-options";
+
 
 interface ListHeaderProps {
   data: List;
@@ -22,7 +22,8 @@ export const ListHeader = ({
   data,
   onAddCard,
 }: ListHeaderProps) => {
-  const [title, setTitle] = useState(data.title);
+  console.log("data: ", data)
+  const [title, setTitle] = useState(data.title?.toUpperCase());
   const [isEditing, setIsEditing] = useState(false);
 
   const formRef = useRef<ElementRef<"form">>(null);
@@ -77,14 +78,28 @@ export const ListHeader = ({
     }
   };
 
+  const { execute: executeDelete } = useAction(deleteList, {
+    onSuccess: (data) => {
+      toast.success(`List "${data.title}" deleted`);
+    },
+    onError: (error) => {
+      toast.error(error);
+    }
+  });
+
+  const onDelete = () => {
+    const { id, boardId } = data;
+    executeDelete({ id, boardId });
+  };
+
   useEventListener("keydown", onKeyDown);
 
   return (
-    <div className="pt-2 px-2 text-sm font-semibold flex justify-between items-start- gap-x-2">
+    <div className="mb-4 pt-2 px-2 text-sm font-semibold flex justify-between items-start- gap-x-2 ">
       {isEditing ? (
-        <form 
+        <form
           ref={formRef}
-          action={handleSubmit}  
+          action={handleSubmit}
           className="flex-1 px-[2px]"
         >
           <input hidden id="id" name="id" value={data.id} />
@@ -102,15 +117,28 @@ export const ListHeader = ({
       ) : (
         <div
           onClick={enableEditing}
-          className="w-full text-sm px-2.5 py-1 h-7 font-medium border-transparent"
+          className="w-full font-bold px-2.5 py-1 h-7  border-transparent"
         >
-          {title}
+          {title} {data?.cards.length}
         </div>
       )}
-      <ListOptions
-        onAddCard={onAddCard}
-        data={data}
-      />
+      <div className="flex items-center gap-4">
+        <button
+        className="p-2"
+          onClick={onAddCard}
+        >
+          <FaPlus />
+        </button>
+
+        <button
+          onClick={onDelete}
+        >
+          <FaTrash />
+        </button>
+      </div>
+
+
+
     </div>
   );
 };
