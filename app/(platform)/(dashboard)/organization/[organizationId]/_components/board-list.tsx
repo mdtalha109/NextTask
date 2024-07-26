@@ -17,12 +17,9 @@ export const BoardList = async () => {
     return redirect("/select-org");
   }
 
-  const boards = await db.board.findMany({
-   
-  });
 
- 
 
+  const boards = await db.board.findMany();
 
   return (
     <div className="space-y-4">
@@ -35,7 +32,7 @@ export const BoardList = async () => {
           <Link
             key={board.id}
             href={`/board/${board.id}`}
-            className="group relative aspect-video bg-no-repeat bg-center bg-cover bg-sky-700 rounded-sm h-full w-full p-2 overflow-hidden"
+            className="group relative aspect-video bg-no-repeat bg-center bg-cover bg-sky-700 rounded-sm h-full w-full p-2 overflow-hidden flex justify-center items-center"
            
           >
             <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition" />
@@ -50,9 +47,6 @@ export const BoardList = async () => {
             className="aspect-video relative h-full w-full bg-muted rounded-sm flex flex-col gap-y-1 items-center justify-center hover:opacity-75 transition"
           >
             <p className="text-sm">Create new board</p>
-            <span className="text-xs">
-                5 remaining
-            </span>
             <Hint
               sideOffset={40}
               description={`

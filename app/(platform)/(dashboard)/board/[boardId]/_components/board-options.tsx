@@ -12,7 +12,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { deleteBoard } from "@/actions/delete-board";
+import { deleteBoard } from "@/actions/delete-board ";
 
 
 interface BoardOptionsProps {
@@ -20,14 +20,14 @@ interface BoardOptionsProps {
 };
 
 export const BoardOptions = ({ id }: BoardOptionsProps) => {
-  // const { execute, isLoading } = useAction(deleteBoard, {
-  //   onError: (error) => {
-  //     toast.error(error);
-  //   }
-  // });
+  const { execute, isLoading } = useAction(deleteBoard, {
+    onError: (error) => {
+      toast.error(error);
+    }
+  });
 
   const onDelete = () => {
-    // execute({ id });
+    execute({ id });
   };
 
   return (
