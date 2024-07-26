@@ -1,8 +1,7 @@
 "use client";
-
+import moment from 'moment';
 import { Card } from "@prisma/client";
 import { Draggable } from "@hello-pangea/dnd";
-
 import { useCardModal } from "@/hooks/use-card-modal";
 
 interface CardItemProps {
@@ -25,9 +24,13 @@ export const CardItem = ({
           ref={provided.innerRef}
           role="button"
           onClick={() => cardModal.onOpen(data.id)}
-          className="truncate border-2 border-transparent hover:border-black py-2 px-3 text-sm bg-white rounded-md shadow-sm"
+          className="flex flex-col gap-4 border-2 border-transparent hover:border-black py-2 px-3 text-sm bg-white rounded-md shadow-sm"
         >
-          {data.title}
+          <div className="text-base font-medium ">{data.title}</div>
+          <div className="text-sm line-clamp-4 text-muted-foreground">{data.description}</div>
+          <div>{moment(data.createdAt).format('MMMM D, YYYY')}</div>
+          
+          
         </div>
       )}
     </Draggable>
