@@ -20,7 +20,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     };
   }
 
-  const { title, boardId, listId } = data;
+  const { title, description, boardId, listId } = data;
   let card;
 
   try {
@@ -49,6 +49,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       data: {
         title,
         listId,
+        description,
         order: newOrder,
       },
     });
