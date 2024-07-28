@@ -1,9 +1,11 @@
+'use client';
+
 import { Toaster } from "sonner";
-import { ClerkProvider } from "@clerk/nextjs";
 
 import { ModalProvider } from "@/components/providers/modal-provider";
 import { QueryProvider } from "@/components/providers/query-provider";
-
+import { Provider } from "react-redux";
+import { store } from "@/redux/store";
 
 const PlatformLayout = ({
   children
@@ -11,13 +13,15 @@ const PlatformLayout = ({
   children: React.ReactNode;
 }) => {
   return (
-    <ClerkProvider>
-      <QueryProvider>
-        <Toaster />
-        <ModalProvider />
-        {children}
-      </QueryProvider>
-    </ClerkProvider>
+    <Provider store={store}>
+      
+        <QueryProvider>
+          <Toaster />
+          <ModalProvider />
+          {children}
+        </QueryProvider>
+    
+    </Provider>
   );
 };
 
