@@ -1,39 +1,59 @@
 "use server"
 
-import { auth } from "@clerk/nextjs";
 import { InputType, ReturnType } from "./types";
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { createSafeAction } from "@/lib/create-safe-action";
 import { CreateBoard } from "./schema";
+import { cookies } from "next/headers";
+import jwt from "jsonwebtoken";
 
 const handler = async (data: InputType): Promise<ReturnType> => {
-    const {userId, orgId} = auth();
 
-    if(!userId || !orgId){
+    const cookieStore = cookies();
+    const token = cookieStore.get("token");
+
+
+
+
+    if (!token) {
         return {
-            error: "Unauthorized"
-        }
+            error: "Unauthorized",
+        };
     }
 
-    const { title } = data;
+    let userId: string | undefined;
+    try {
+        const decoded = jwt.verify(token.value, process.env.JWT_SECRET!) as { userId: string };
+        userId = decoded.userId;
+    } catch (error) {
+        return {
+            error: "Unauthorized",
+        };
+    }
+
+
+    const { title, description, orgId } = data;
     let board;
 
-    try{
+    console.log("description: ", description)
+
+    try {
         board = await db.board.create({
             data: {
                 title,
-                orgId
+                orgId,
+                description
             }
         })
-    } catch(error){
+    } catch (error) {
         return {
             error: "Failed to create."
         }
     }
 
     revalidatePath(`/board/${board.id}`);
-    return {data: board};
+    return { data: board };
 }
 
-export const createBoard = createSafeAction(CreateBoard, handler )
+export const createBoard = createSafeAction(CreateBoard, handler)

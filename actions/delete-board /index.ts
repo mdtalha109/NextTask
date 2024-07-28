@@ -1,6 +1,5 @@
 "use server";
 
-import { auth } from "@clerk/nextjs";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -9,23 +8,32 @@ import { createSafeAction } from "@/lib/create-safe-action";
 
 import { DeleteBoard } from "./schema";
 import { InputType, ReturnType } from "./type";
-// import { createAuditLog } from "@/lib/create-audit-log";
-// import { ACTION, ENTITY_TYPE } from "@prisma/client";
-// import { decreaseAvailableCount } from "@/lib/org-limit";
-// import { checkSubscription } from "@/lib/subscription";
+import { cookies } from "next/headers";
+import jwt from "jsonwebtoken";
 
 const handler = async (data: InputType): Promise<ReturnType> => {
-  const { userId, orgId } = auth();
+  const cookieStore = cookies();
+  const token = cookieStore.get("token");
 
-  if (!userId || !orgId) {
-    return {
-      error: "Unauthorized",
-    };
+  if (!token) {
+      return {
+          error: "Unauthorized",
+      };
+  }
+
+  let userId: string | undefined;
+  try {
+      const decoded = jwt.verify(token.value, process.env.JWT_SECRET!) as { userId: string };
+      userId = decoded.userId;
+  } catch (error) {
+      return {
+          error: "Unauthorized",
+      };
   }
 
   // const isPro = await checkSubscription();
 
-  const { id } = data;
+  const { id, orgId } = data;
   let board;
 
   try {
@@ -36,16 +44,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       },
     });
 
-    // if (!isPro) {
-    //   await decreaseAvailableCount();
-    // }
 
-    // await createAuditLog({
-    //   entityTitle: board.title,
-    //   entityId: board.id,
-    //   entityType: ENTITY_TYPE.BOARD,
-    //   action: ACTION.DELETE,
-    // })
   } catch (error) {
     return {
       error: "Failed to delete."

@@ -1,6 +1,5 @@
 "use server";
 
-import { auth } from "@clerk/nextjs";
 import { revalidatePath } from "next/cache";
 
 
@@ -10,11 +9,24 @@ import { createSafeAction } from "@/lib/create-safe-action";
 
 import { CreateCard } from "./schema";
 import { InputType, ReturnType } from "./types";
+import { cookies } from "next/headers";
+import jwt from "jsonwebtoken";
 
 const handler = async (data: InputType): Promise<ReturnType> => {
-  const { userId, orgId } = auth();
 
-  if (!userId || !orgId) {
+  const cookieStore = cookies();
+  const token = cookieStore.get("token");
+  if (!token) {
+    return {
+      error: "Unauthorized",
+    };
+  }
+
+  let userId: string | undefined;
+  try {
+    const decoded = jwt.verify(token.value, process.env.JWT_SECRET!) as { userId: string };
+    userId = decoded.userId;
+  } catch (error) {
     return {
       error: "Unauthorized",
     };
@@ -27,7 +39,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     const list = await db.list.findUnique({
       where: {
         id: listId,
-       
+
       },
     });
 
@@ -54,7 +66,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
       },
     });
 
-   
+
   } catch (error) {
     return {
       error: "Failed to create."
