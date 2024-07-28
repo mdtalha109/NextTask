@@ -6,6 +6,9 @@ import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { setUser } from '@/redux/slice/userSlice';
 import { setOrganizations, setSelectedOrganization } from '@/redux/slice/organizationSlice';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { toast } from 'sonner';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -36,15 +39,15 @@ export default function SignIn() {
         router.push(redirectUrl);
       }
     } else {
-      alert(data.error || 'Sign-in failed');
+      toast(data.error || 'Please try again');
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-    <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
-      <h1 className="text-2xl font-bold mb-4 text-center">Sign In</h1>
-      <div className="mb-4">
+    <div className="min-h-screen w-[90vw] sm:min-w-full  flex items-center justify-center">
+    <div className="bg-white flex flex-col gap-4 p-6 rounded-lg shadow-lg w-full max-w-sm">
+      <h1 className="text-2xl font-bold  text-center">Sign In</h1>
+      <div >
         <label htmlFor="email" className="block text-sm font-medium text-gray-700">
           Email
         </label>
@@ -57,7 +60,7 @@ export default function SignIn() {
           placeholder="Email"
         />
       </div>
-      <div className="mb-6">
+      <div >
         <label htmlFor="password" className="block text-sm font-medium text-gray-700">
           Password
         </label>
@@ -70,12 +73,20 @@ export default function SignIn() {
           placeholder="Password"
         />
       </div>
-      <button
+
+     
+      <Button
         onClick={handleSignIn}
-        className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        className="w-full"
       >
         Sign In
-      </button>
+      </Button>
+      
+     
+      <div className='text-center'>
+      <Link href={`/sign-up`}>Don't have an account? Sign up</Link>
+      </div>
+      
     </div>
   </div>
   );

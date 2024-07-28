@@ -3,6 +3,9 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { toast } from 'sonner';
 
 export default function SignUp() {
   const [email, setEmail] = useState('');
@@ -10,24 +13,33 @@ export default function SignUp() {
   const router = useRouter();
 
   const handleSignUp = async () => {
-    const res = await fetch('/api/auth/signup', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
 
-    if (res.ok) {
-      router.push('/sign-in');
-    } else {
-      alert('Sign-up failed');
+    try {
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+    
+      const result = await response.json();
+    
+      if (result.ok) {
+        router.push('/sign-in');
+      } else {
+        toast.error(result.error || 'Something went wrong, Please try again later.');
+      }
+    } catch (err) {
+      console.error("Error during sign-up:", err);
+      toast.error('An unexpected error occurred. Please try again later.');
     }
+     
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
-        <h1 className="text-2xl font-bold mb-4 text-center">Sign Up</h1>
-        <div className="mb-4">
+    <div className="min-h-screen  w-[90vw] sm:min-w-full flex items-center justify-center ">
+      <div className="bg-white flex flex-col gap-4 p-6 rounded-lg shadow-lg w-full max-w-sm">
+        <h1 className="text-2xl font-bold  text-center">Create your account</h1>
+        <div >
           <label htmlFor="email" className="block text-sm font-medium text-gray-700">
             Email
           </label>
@@ -40,7 +52,7 @@ export default function SignUp() {
             placeholder="Email"
           />
         </div>
-        <div className="mb-6">
+        <div >
           <label htmlFor="password" className="block text-sm font-medium text-gray-700">
             Password
           </label>
@@ -53,12 +65,20 @@ export default function SignUp() {
             placeholder="Password"
           />
         </div>
-        <button
+
+
+        <Button
           onClick={handleSignUp}
-          className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className="w-full"
         >
-          Sign Up
-        </button>
+          Sign In
+        </Button>
+
+
+        <div className='text-center'>
+          <Link href={`/sign-in`}>Already have an account? Sign in</Link>
+        </div>
+
       </div>
     </div>
   );
