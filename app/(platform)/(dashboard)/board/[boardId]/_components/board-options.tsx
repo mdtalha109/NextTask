@@ -13,6 +13,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { deleteBoard } from "@/actions/delete-board ";
+import { useOrganization } from "@/hooks/use-organization";
 
 
 interface BoardOptionsProps {
@@ -20,6 +21,11 @@ interface BoardOptionsProps {
 };
 
 export const BoardOptions = ({ id }: BoardOptionsProps) => {
+
+  const {selectedOrganization} = useOrganization()
+
+  if(!selectedOrganization) return
+
   const { execute, isLoading } = useAction(deleteBoard, {
     onError: (error) => {
       toast.error(error);
@@ -27,7 +33,7 @@ export const BoardOptions = ({ id }: BoardOptionsProps) => {
   });
 
   const onDelete = () => {
-    execute({ id });
+    execute({ id, orgId: selectedOrganization.id as string });
   };
 
   return (
