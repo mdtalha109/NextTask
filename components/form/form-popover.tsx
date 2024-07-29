@@ -25,12 +25,14 @@ interface FormPopoverProps {
   side?: "left" | "right" | "top" | "bottom";
   align?: "start" | "center" | "end";
   sideOffset?: number;
+  orgId : string
 };
 
 export const FormPopover = ({
   children,
   side = "bottom",
   align,
+  orgId,
   sideOffset = 0,
 }: FormPopoverProps) => {
 
@@ -54,8 +56,9 @@ export const FormPopover = ({
 
   const onSubmit = (formData: FormData) => {
     const title = formData.get("title") as string;
+    const description = formData.get("description") as string;
 
-    execute({ title, image: "" });
+    execute({ title, orgId, description, image: "" });
   }
 
   return (

@@ -45,7 +45,7 @@ export const BoardList = () => {
 
       <CreateBoardDialog setBoards={setBoards} orgId={params.organizationId} loading={loading} />
       {boards.map((board) => (
-        <BoardItem board={board}/>
+        <BoardItem board={board} key={board?.id}/>
       ))}
 
     </div>
