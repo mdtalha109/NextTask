@@ -84,7 +84,7 @@ export default function SignIn() {
       
      
       <div className='text-center'>
-      <Link href={`/sign-up`}>Don't have an account? Sign up</Link>
+      <Link href={`/sign-up`}>Don&apos;t have an account? Sign up</Link>
       </div>
       
     </div>
