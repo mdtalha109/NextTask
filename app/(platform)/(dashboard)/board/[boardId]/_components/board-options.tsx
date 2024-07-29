@@ -22,15 +22,15 @@ interface BoardOptionsProps {
 
 export const BoardOptions = ({ id }: BoardOptionsProps) => {
 
-  const {selectedOrganization} = useOrganization()
-
-  if(!selectedOrganization) return
+  const {selectedOrganization} = useOrganization();
 
   const { execute, isLoading } = useAction(deleteBoard, {
     onError: (error) => {
       toast.error(error);
     }
   });
+
+  if(!selectedOrganization) return
 
   const onDelete = () => {
     execute({ id, orgId: selectedOrganization.id as string });
