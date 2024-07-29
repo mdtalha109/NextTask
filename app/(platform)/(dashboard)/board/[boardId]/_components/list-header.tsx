@@ -1,7 +1,6 @@
 "use client";
 
 import { toast } from "sonner";
-import { List } from "@prisma/client";
 import { useEventListener } from "usehooks-ts";
 import { useState, useRef, ElementRef } from "react";
 
@@ -10,11 +9,12 @@ import { useAction } from "@/hooks/use-action";
 import { FormInput } from "@/components/form/form-input";
 import { updateList } from "@/actions/update-list";
 import { deleteList } from "@/actions/delete-list";
+import { ListWithCards } from "@/app/types";
 
 
 
 interface ListHeaderProps {
-  data: List;
+  data: ListWithCards;
   onAddCard: () => void;
 };
 

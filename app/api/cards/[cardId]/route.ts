@@ -14,9 +14,7 @@ export async function GET(
     const token = cookieStore.get("token");
 
     if (!token) {
-      return {
-        error: "Unauthorized",
-      };
+      return new NextResponse("Unauthorized", { status: 401 });
     }
 
     let userId: string | undefined;
@@ -24,9 +22,7 @@ export async function GET(
       const decoded = jwt.verify(token.value, process.env.JWT_SECRET!) as { userId: string };
       userId = decoded.userId;
     } catch (error) {
-      return {
-        error: "Unauthorized",
-      };
+      return new NextResponse("Unauthorized", { status: 401 });
     }
 
     if (!userId) {
