@@ -1,35 +1,25 @@
-import { authMiddleware, redirectToSignIn } from "@clerk/nextjs";
-import { NextResponse } from "next/server";
- 
-// This example protects all routes including api/trpc routes
-// Please edit this to allow other routes to be public as needed.
-// See https://clerk.com/docs/references/nextjs/auth-middleware for more information about configuring your Middleware
-export default authMiddleware({
-  publicRoutes : ["/"],
-  afterAuth(auth, req) {
-    if (auth.userId && auth.isPublicRoute) {
-      let path = "/select-org";
+import { NextRequest, NextResponse } from 'next/server';
 
-      if (auth.orgId) {
-        path = `/organization/${auth.orgId}`;
-      }
+export function middleware(req: NextRequest) {
+  const { pathname } = req.nextUrl;
 
-      const orgSelection = new URL(path, req.url);
-      return NextResponse.redirect(orgSelection);
-    }
+  const publicRoutes = ['/', '/sign-in', '/sign-up'];
 
-    if (!auth.userId && !auth.isPublicRoute) {
-      return redirectToSignIn({ returnBackUrl: req.url });
-    }
-
-    if (auth.userId && !auth.orgId && req.nextUrl.pathname !== "/select-org") {
-      const orgSelection = new URL("/select-org", req.url);
-      return NextResponse.redirect(orgSelection);
-    }
+  if (publicRoutes.includes(pathname)) {
+    return NextResponse.next();
   }
-});
- 
+
+  const token = req.cookies.get('token')?.value;
+
+  if (!token) {
+    return NextResponse.redirect(new URL('/sign-in', req.url));
+  }
+
+}
+
 export const config = {
-  matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
+  matcher: ['/organization/:path*', '/create-organization/:path*', '/board/:path*'],
 };
+
+
  
