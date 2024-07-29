@@ -1,11 +1,19 @@
+import { Organizations, organization } from '@/app/types/organization';
 import { createSlice } from '@reduxjs/toolkit';
+
+type OrganizationState = {
+  selectedOrganization: organization | null;
+  organizations: Organizations;
+};
+
+const initialState: OrganizationState = {
+  selectedOrganization: null,
+  organizations: [],
+};
 
 export const organizationSlice = createSlice({
   name: 'organization',
-  initialState: {
-    selectedOrganization: null,
-    organizations: [],
-  },
+  initialState,
   reducers: {
     setSelectedOrganization: (state, action) => {
       state.selectedOrganization = action.payload;

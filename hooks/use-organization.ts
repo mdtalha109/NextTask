@@ -16,21 +16,33 @@ export const useOrganization = () => {
     const { organizations, selectedOrganization } = useSelector((state: RootState) => state.organization);
     const [loading, setLoading] = useState(true);
 
+    const selectOrganization = (organizationId: string) => {
+      organizations.forEach((org) => {
+        if(org.id == organizationId){
+          dispatch(setSelectedOrganization(org));
+          return;
+        }
+      })
+      
+    }
+
+    const fetchOrganizations = async () => {
+      try {
+        const response = await fetch('/api/organization/get-organization');
+        const data = await response.json();
+        
+        if (response.ok) {
+          dispatch(setOrganizations(data.organizations));
+        }
+      } catch (error) {
+        console.error('Failed to fetch organizations:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     useEffect(() => {
-        const fetchOrganizations = async () => {
-          try {
-            const response = await fetch('/api/organization/get-organization');
-            const data = await response.json();
-            
-            if (response.ok) {
-              dispatch(setOrganizations(data.organizations));
-            }
-          } catch (error) {
-            console.error('Failed to fetch organizations:', error);
-          } finally {
-            setLoading(false);
-          }
-        };
+        
         
         if (organizations.length === 0) {
           fetchOrganizations();
@@ -49,7 +61,7 @@ export const useOrganization = () => {
       }, [orgId, organizations, dispatch]);
 
 
-    return { organizations, selectedOrganization, loading }
+    return { organizations, selectedOrganization, fetchOrganizations, selectOrganization, loading }
 
     
 
