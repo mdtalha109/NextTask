@@ -56,7 +56,7 @@ export default function CreateOrganization() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-[90vw] max-w-sm">
         <h1 className="text-2xl font-bold mb-4 text-center">Create Organization</h1>
         <div className="mb-4">
           <Label htmlFor="title" className="block text-sm font-medium text-gray-700">
