@@ -33,12 +33,10 @@ export const Navbar = () => {
                     NextTask
                 </div>
 
-                <div className=" md:hidden">
-                    NT
-                </div>
+               
             </div>
 
-            <div className="ml-auto flex items-center gap-x-2">
+            <div className="md:ml-auto flex w-full md:w-auto  justify-between sm:items-center gap-x-2">
                 <OrganizationSelector/>
                 
                 <Button onClick={handleLogout}><FaSignOutAlt/></Button>
