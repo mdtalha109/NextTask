@@ -1,6 +1,7 @@
 'use client';
 
 import { Toaster } from "sonner";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 import { ModalProvider } from "@/components/providers/modal-provider";
 import { QueryProvider } from "@/components/providers/query-provider";
@@ -20,6 +21,8 @@ const PlatformLayout = ({
           <ModalProvider />
           {children}
         </QueryProvider>
+        <SpeedInsights/>
+        
     
     </Provider>
   );
