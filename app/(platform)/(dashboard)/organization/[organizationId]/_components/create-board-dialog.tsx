@@ -62,7 +62,7 @@ const CreateBoardDialog = ({ setBoards,orgId, loading }: any) => {
           <FormInput id="title" placeholder="Enter a title for this Board..." />
           <FormTextarea id="description" placeholder="Enter a description for this Board..." />
           <div className="flex items-center gap-x-1">
-            <FormSubmit>Add card</FormSubmit>
+            <FormSubmit>Add Board</FormSubmit>
           </div>
         </form>
       </DialogContent>

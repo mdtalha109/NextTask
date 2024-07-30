@@ -9,15 +9,18 @@ import { setOrganizations, setSelectedOrganization } from '@/redux/slice/organiz
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { toast } from 'sonner';
+import BeatLoader from 'react-spinners/BeatLoader';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
 
   const handleSignIn = async (event:any) => {
     event.preventDefault();
+    setLoading(true);
 
     const response = await fetch('/api/auth/signin', {
       method: 'POST',
@@ -41,6 +44,7 @@ export default function SignIn() {
     } else {
       toast(data.error || 'Please try again');
     }
+    setLoading(false);
   };
 
   return (
@@ -79,7 +83,11 @@ export default function SignIn() {
         onClick={handleSignIn}
         className="w-full"
       >
-        Sign In
+        {loading ? (
+           <BeatLoader color='white'/>
+          ) : (
+            'Sign In'
+          )}
       </Button>
       
      

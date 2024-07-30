@@ -6,15 +6,18 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { toast } from 'sonner';
+import BeatLoader from 'react-spinners/BeatLoader';
 
 export default function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleSignUp = async () => {
 
     try {
+      setLoading(true)
       const response = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -32,6 +35,7 @@ export default function SignUp() {
       console.error("Error during sign-up:", err);
       toast.error('An unexpected error occurred. Please try again later.');
     }
+    setLoading(false)
      
   };
 
@@ -71,7 +75,11 @@ export default function SignUp() {
           onClick={handleSignUp}
           className="w-full"
         >
-          Sign In
+          {loading ? (
+           <BeatLoader color='white'/>
+          ) : (
+            'Sign Up'
+          )}
         </Button>
 
 
