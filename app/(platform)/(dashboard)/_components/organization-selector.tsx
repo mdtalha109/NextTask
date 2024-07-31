@@ -40,7 +40,7 @@ export const OrganizationSelector = () => {
     <div>
       <div className="flex items-center gap-x-4">
         <Select onValueChange={(value)=>changeOrganizationHandler(value)}>
-        <SelectTrigger className="w-[280px]">
+        <SelectTrigger className="w-[60vw] md:w-[280px]">
             <SelectValue placeholder={selectedOrganization?.title } />
         </SelectTrigger>
         <SelectContent>
