@@ -25,8 +25,8 @@ export default function SignUp() {
       });
     
       const result = await response.json();
-    
-      if (result.ok) {
+      if (result) {
+        toast.success('Account created successfully. Please Login to continue.')
         router.push('/sign-in');
       } else {
         toast.error(result.error || 'Something went wrong, Please try again later.');
